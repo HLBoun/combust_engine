@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cmbst_device.cpp" />
     <ClCompile Include="cmbst_pipeline.cpp" />
     <ClCompile Include="cmbst_window.cpp" />
     <ClCompile Include="first_app.cpp" />
@@ -142,6 +143,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cmbst_device.hpp" />
     <ClInclude Include="cmbst_pipeline.hpp" />
     <ClInclude Include="cmbst_window.hpp" />
     <ClInclude Include="first_app.hpp" />

@@ -27,6 +27,9 @@
     <ClCompile Include="cmbst_pipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cmbst_device.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmbst_window.hpp">
@@ -36,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="cmbst_pipeline.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmbst_device.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
