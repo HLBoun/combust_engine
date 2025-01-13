@@ -2,7 +2,7 @@
 
 
 #include "cmbst_window.hpp"
-
+#include "cmbst_pipeline.hpp"
 
 
 namespace cmbst 
@@ -17,5 +17,6 @@ namespace cmbst
     
     private:
       CmbstWindow cmbstWindow{WIDTH, HEIGHT, "Hello Vulkan!"};
+      CmbstPipeline cmbstPipeline{"shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv"};
   };
 } // namespace cmbst
