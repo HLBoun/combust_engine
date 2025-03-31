@@ -12,6 +12,13 @@ namespace cmbst
     public:
       CmbstWindow(int w, int h, std::string name);
       ~CmbstWindow();
+
+      CmbstWindow(const CmbstWindow &) = delete;
+      CmbstWindow &operator=(const CmbstWindow &) = delete;
+
+      bool shouldClose(){ return glfwWindowShouldClose(window); }
+
+      void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
     private:
 
       void initWindow();

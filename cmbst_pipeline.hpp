@@ -35,4 +35,4 @@ namespace cmbst
       VkShaderModule vertShaderModule;
       VkShaderModule fragShaderModule;
   };
-}
+} // namespsace cmbst

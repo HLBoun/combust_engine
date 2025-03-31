@@ -19,7 +19,9 @@ namespace cmbst
     private:
       CmbstWindow cmbstWindow{WIDTH, HEIGHT, "Hello Vulkan!"};
       CmbstDevice cmbstDevice {cmbstWindow};
-      CmbstPipeline cmbstPipeline {cmbstDevice, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", CmbstPipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)};
+      CmbstPipeline cmbstPipeline {cmbstDevice,
+        "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv",
+        CmbstPipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)};
   };
 
 } // namespace cmbst
