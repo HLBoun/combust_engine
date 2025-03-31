@@ -1,0 +1,20 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (vulkanTest.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  cmbst_device.cpp
+C:\Users\Legend Boun\Documents\CodingProjects\combust_engine\combust_engine\cmbst_device.cpp(196,44): error C2039: 'createWindowSurface': is not a member of 'cmbst::CmbstWindow'
+      C:\Users\Legend Boun\Documents\CodingProjects\combust_engine\combust_engine\cmbst_window.hpp(10,9):
+      see declaration of 'cmbst::CmbstWindow'
+  
+  cmbst_pipeline.cpp
+  cmbst_window.cpp
+C:\Users\Legend Boun\Documents\CodingProjects\combust_engine\combust_engine\cmbst_window.cpp(31,21): error C2039: 'createWindowSurface': is not a member of 'cmbst::CmbstWindow'
+      C:\Users\Legend Boun\Documents\CodingProjects\combust_engine\combust_engine\cmbst_window.hpp(10,9):
+      see declaration of 'cmbst::CmbstWindow'
+  
+C:\Users\Legend Boun\Documents\CodingProjects\combust_engine\combust_engine\cmbst_window.cpp(33,43): error C2065: 'window': undeclared identifier
+  first_app.cpp
+C:\Users\Legend Boun\Documents\CodingProjects\combust_engine\combust_engine\first_app.cpp(9,25): error C2039: 'shouldClose': is not a member of 'cmbst::CmbstWindow'
+      C:\Users\Legend Boun\Documents\CodingProjects\combust_engine\combust_engine\cmbst_window.hpp(10,9):
+      see declaration of 'cmbst::CmbstWindow'
+  
+  main.cpp
+  Generating Code...
