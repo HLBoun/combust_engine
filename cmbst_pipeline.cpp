@@ -143,6 +143,11 @@ namespace cmbst
       throw std::runtime_error("failed to create shader module");
     }
   }
+
+  void CmbstPipeline::bind(VkCommandBuffer commandBuffer)
+  {
+    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+  }
   
   PipelineConfigInfo CmbstPipeline::defaultPipelineConfigInfo(uint32_t width, uint32_t height)
   {
