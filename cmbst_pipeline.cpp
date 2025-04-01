@@ -39,13 +39,25 @@ namespace cmbst
     return buffer;
   }
 
-  void CmbstPipeline::createGraphicsPipeline(const std::string& vertFilePath, const std::string& fragFilepath, const PipelineConfigInfo& configInfo)
+  void CmbstPipeline::createGraphicsPipeline(
+      const std::string& vertFilePath,
+      const std::string& fragFilepath,
+      const PipelineConfigInfo& configInfo)
   {
     auto vertCode = readFile(vertFilePath);
     auto fragCode = readFile(fragFilepath);
 
-    std::cout << "Vertex Shader Code Size: " << vertCode.size() << '\n';
-    std::cout << "Fragment Shader Code Size: " << fragCode.size() << '\n';
+    createShaderModule(vertCode, &vertShaderModule);
+    createShaderModule(fragCode, &fragShaderModule);
+
+    VkPipelineShaderStageCreateInfo shaderStages[2];
+    shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    shaderStages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
+    shaderStages[0].module = vertShaderModule;
+    shaderStages[0].pName = "main";
+    shaderStages[0].flags = 0;
+    shaderStages[0].pNext = nullptr;
+    shaderStages[0].pSpecializationInfo = nullptr; // YOU WERE HERE DOOFUS 04 11:38
   }
   
   void CmbstPipeline::createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule)
