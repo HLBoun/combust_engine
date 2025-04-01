@@ -11,13 +11,23 @@
 namespace cmbst 
 {
 
-  CmbstPipeline::CmbstPipeline(CmbstDevice& device, const std::string& vertFilePath, const std::string& fragFilepath, const PipelineConfigInfo& configInfo)
+  CmbstPipeline::CmbstPipeline(
+      CmbstDevice& device,
+      const std::string& vertFilePath,
+      const std::string& fragFilepath,
+      const PipelineConfigInfo& configInfo)
       : cmbstDevice{device}
   {
   
     createGraphicsPipeline(vertFilePath, fragFilepath, configInfo);
   }
-
+  
+  CmbstPipeline::~CmbstPipeline()
+  {
+    vkDestroyShaderModule(cmbstDevice.device(), vertShaderModule, nullptr);
+    vkDestroyShaderModule(cmbstDevice.device(), fragShaderModule, nullptr);
+    vkDestroyPipeline(cmbstDevice.device(), graphicsPipeline, nullptr);
+  }
 
   std::vector<char> CmbstPipeline::readFile(const std::string& filepath)
   {
@@ -44,6 +54,13 @@ namespace cmbst
       const std::string& fragFilepath,
       const PipelineConfigInfo& configInfo)
   {
+    assert(
+        configInfo.pipelineLayout != VK_NULL_HANDLE &&
+        "Cannot create graphics pipeline:: no pipelineLayout provided in configInfo");
+    assert(
+        configInfo.renderPass != VK_NULL_HANDLE &&
+        "Cannot create graphics pipeline:: no renderPass provided in configInfo");
+
     auto vertCode = readFile(vertFilePath);
     auto fragCode = readFile(fragFilepath);
 
@@ -57,7 +74,61 @@ namespace cmbst
     shaderStages[0].pName = "main";
     shaderStages[0].flags = 0;
     shaderStages[0].pNext = nullptr;
-    shaderStages[0].pSpecializationInfo = nullptr; // YOU WERE HERE DOOFUS 04 11:38
+    shaderStages[0].pSpecializationInfo = nullptr;
+    shaderStages[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    shaderStages[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+    shaderStages[1].module = fragShaderModule;
+    shaderStages[1].pName = "main";
+    shaderStages[1].flags = 0;
+    shaderStages[1].pNext = nullptr;
+    shaderStages[1].pSpecializationInfo = nullptr;
+
+    VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
+    vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+    vertexInputInfo.vertexAttributeDescriptionCount = 0;
+    vertexInputInfo.vertexBindingDescriptionCount = 0;
+    vertexInputInfo.pVertexAttributeDescriptions = nullptr;
+    vertexInputInfo.pVertexBindingDescriptions = nullptr;
+
+    VkPipelineViewportStateCreateInfo viewportInfo{};
+    viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+    viewportInfo.viewportCount = 1;
+    viewportInfo.pViewports = &configInfo.viewport;
+    viewportInfo.scissorCount = 1;
+    viewportInfo.pScissors = &configInfo.scissor;
+
+
+    VkGraphicsPipelineCreateInfo pipelineInfo{};
+    pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+    pipelineInfo.stageCount = 2;
+    pipelineInfo.pStages = shaderStages;
+    pipelineInfo.pVertexInputState = &vertexInputInfo;
+    pipelineInfo.pInputAssemblyState = &configInfo.inputAssemblyInfo;
+    pipelineInfo.pViewportState = &viewportInfo;
+    pipelineInfo.pRasterizationState = &configInfo.rasterizationInfo;
+    pipelineInfo.pMultisampleState = &configInfo.multisampleInfo;
+    pipelineInfo.pColorBlendState = &configInfo.colorBlendInfo;
+    pipelineInfo.pDepthStencilState = &configInfo.depthStencilInfo;
+    pipelineInfo.pDynamicState = nullptr;
+
+    pipelineInfo.layout = configInfo.pipelineLayout;
+    pipelineInfo.renderPass = configInfo.renderPass;
+    pipelineInfo.subpass = configInfo.subpass;
+
+    pipelineInfo.basePipelineIndex = -1;
+    pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+
+    if (vkCreateGraphicsPipelines(
+          cmbstDevice.device(),
+          VK_NULL_HANDLE,
+          1,
+          &pipelineInfo,
+          nullptr,
+          &graphicsPipeline) != VK_SUCCESS)
+    {
+      throw std::runtime_error("HLBoun: failed to create graphics pipeline");
+    }
+    
   }
   
   void CmbstPipeline::createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule)
@@ -90,12 +161,6 @@ namespace cmbst
 
     configInfo.scissor.offset = {0, 0};
     configInfo.scissor.extent = {width, height};
-
-    configInfo.viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-    configInfo.viewportInfo.viewportCount = 1;
-    configInfo.viewportInfo.pViewports = &configInfo.viewport;
-    configInfo.viewportInfo.scissorCount = 1;
-    configInfo.viewportInfo.pScissors = &configInfo.scissor;
 
     configInfo.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     configInfo.rasterizationInfo.depthClampEnable = VK_FALSE;

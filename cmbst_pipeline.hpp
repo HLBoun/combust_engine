@@ -13,7 +13,7 @@ namespace cmbst
   {
     VkViewport viewport;
     VkRect2D scissor;
-    VkPipelineViewportStateCreateInfo viewportInfo;
+
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
     VkPipelineRasterizationStateCreateInfo rasterizationInfo;
     VkPipelineMultisampleStateCreateInfo multisampleInfo;
@@ -28,9 +28,14 @@ namespace cmbst
   class CmbstPipeline
   {
     public:
-      CmbstPipeline(CmbstDevice &device, const std::string& verFilePath, const std::string& fragFilepath, const PipelineConfigInfo& configInfo);
+      CmbstPipeline(
+          CmbstDevice &device,
+          const std::string& verFilePath,
+          const std::string& fragFilepath,
+          const PipelineConfigInfo& configInfo);
 
-      ~CmbstPipeline() {}
+      ~CmbstPipeline();
+
 
       CmbstPipeline(const CmbstPipeline&) = delete;
       void operator=(const CmbstPipeline&) = delete;

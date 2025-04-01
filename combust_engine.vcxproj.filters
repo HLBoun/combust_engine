@@ -30,6 +30,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cmbst_swap_chain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmbst_device.hpp">
@@ -41,5 +44,16 @@
     <ClInclude Include="first_app.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="cmbst_swap_chain.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\simple_shader.frag">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="shaders\simple_shader.vert">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
