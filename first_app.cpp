@@ -9,6 +9,7 @@ namespace cmbst
 {
   FirstApp::FirstApp()
   {
+    loadModels();
     createPipelineLayout();
     createPipeline();
     createCommandBuffers();
@@ -17,6 +18,17 @@ namespace cmbst
   FirstApp::~FirstApp()
   {
     vkDestroyPipelineLayout(cmbstDevice.device(), pipelineLayout, nullptr);
+  }
+
+  void FirstApp::loadModels()
+  {
+    std::vector<CmbstModel::Vertex> vertices
+    {
+      {{0.0f, -0.5f}},
+      {{0.5f, 0.5f}},
+      {{-0.5f, 0.5f}}
+    };
+    cmbstModel = std::make_unique<CmbstModel>(cmbstDevice, vertices);
   }
 
   void FirstApp::run()
@@ -104,7 +116,8 @@ namespace cmbst
       vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
       cmbstPipeline->bind(commandBuffers[i]);
-      vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+      cmbstModel->bind(commandBuffers[i]);
+      cmbstModel->draw(commandBuffers[i]);
 
       vkCmdEndRenderPass(commandBuffers[i]);
       if(vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS)

@@ -5,6 +5,7 @@
 #include "cmbst_pipeline.hpp"
 #include "cmbst_device.hpp"
 #include "cmbst_swap_chain.hpp"
+#include "cmbst_model.hpp"
 
 // std
 #include <memory>
@@ -28,6 +29,7 @@ namespace cmbst
       void run();
     
     private:
+      void loadModels();
       void createPipelineLayout();
       void createPipeline();
       void createCommandBuffers();
@@ -39,6 +41,7 @@ namespace cmbst
       std::unique_ptr<CmbstPipeline> cmbstPipeline;
       VkPipelineLayout pipelineLayout;
       std::vector<VkCommandBuffer> commandBuffers;
+      std::unique_ptr<CmbstModel> cmbstModel;
   };
 
 } // namespace cmbst
