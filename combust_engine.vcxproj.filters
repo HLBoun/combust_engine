@@ -33,6 +33,9 @@
     <ClCompile Include="cmbst_swap_chain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cmbst_model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmbst_device.hpp">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="cmbst_swap_chain.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmbst_model.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
