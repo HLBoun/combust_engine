@@ -17,6 +17,22 @@ namespace cmbst
             VkExtent2D extent)
         : device{ deviceRef }, windowExtent{ extent } 
     {
+        init();
+    }
+
+    CmbstSwapChain::CmbstSwapChain(
+        CmbstDevice& deviceRef,
+        VkExtent2D extent, std::shared_ptr<CmbstSwapChain> previous)
+        : device{ deviceRef }, windowExtent{ extent }, oldSwapChain{ previous }
+    {
+        init();
+
+        //clean up old swap chain since it's no longer needed
+        oldSwapChain = nullptr;
+    }
+
+    void CmbstSwapChain::init()
+    {
         createSwapChain();
         createImageViews();
         createRenderPass();
@@ -185,7 +201,7 @@ namespace cmbst
         createInfo.presentMode = presentMode;
         createInfo.clipped = VK_TRUE;
 
-        createInfo.oldSwapchain = VK_NULL_HANDLE;
+        createInfo.oldSwapchain = oldSwapChain == nullptr ? VK_NULL_HANDLE : oldSwapChain->swapChain;
 
         if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) 
         {

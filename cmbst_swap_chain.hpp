@@ -7,6 +7,7 @@
 
 // std lib headers
 #include <string>
+#include <memory>
 #include <vector>
 
 namespace cmbst {
@@ -16,10 +17,11 @@ namespace cmbst {
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
         CmbstSwapChain(CmbstDevice& deviceRef, VkExtent2D windowExtent);
+        CmbstSwapChain(CmbstDevice& deviceRef, VkExtent2D windowExtent, std::shared_ptr<CmbstSwapChain> previous);
         ~CmbstSwapChain();
 
         CmbstSwapChain(const CmbstSwapChain&) = delete;
-        void operator=(const CmbstSwapChain&) = delete;
+        CmbstSwapChain &operator=(const CmbstSwapChain&) = delete;
 
         VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
         VkRenderPass getRenderPass() { return renderPass; }
@@ -39,6 +41,7 @@ namespace cmbst {
         VkResult submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
 
     private:
+        void init();
         void createSwapChain();
         void createImageViews();
         void createDepthResources();
@@ -69,6 +72,7 @@ namespace cmbst {
         VkExtent2D windowExtent;
 
         VkSwapchainKHR swapChain;
+        std::shared_ptr<CmbstSwapChain> oldSwapChain;
 
         std::vector<VkSemaphore> imageAvailableSemaphores;
         std::vector<VkSemaphore> renderFinishedSemaphores;

@@ -23,9 +23,12 @@ namespace cmbst
   {
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
     window = glfwCreateWindow(width, height, windowName.c_str(), nullptr, nullptr);
+    glfwSetWindowUserPointer(window, this);
+    glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+
   }
   
   void CmbstWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR *surface)
@@ -35,4 +38,13 @@ namespace cmbst
       throw std::runtime_error("failed to create window surface");
     }
   }
+
+  void CmbstWindow::framebufferResizeCallback(GLFWwindow *window, int width, int height)
+  {
+    auto cmbstWindow = reinterpret_cast<CmbstWindow *>(glfwGetWindowUserPointer(window));
+    cmbstWindow->framebufferResized = true;
+    cmbstWindow->width = width;
+    cmbstWindow->height = height;
+  }
+
 } // namespace cmbst

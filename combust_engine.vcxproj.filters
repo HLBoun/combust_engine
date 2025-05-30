@@ -53,6 +53,9 @@
     <ClInclude Include="cmbst_model.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="cmbst_window.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\simple_shader.frag">

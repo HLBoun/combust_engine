@@ -35,7 +35,7 @@ class CmbstDevice {
 
   // Not copyable or movable
   CmbstDevice(const CmbstDevice &) = delete;
-  void operator=(const CmbstDevice &) = delete;
+  CmbstDevice &operator=(const CmbstDevice &) = delete;
   CmbstDevice(CmbstDevice &&) = delete;
   CmbstDevice &operator=(CmbstDevice &&) = delete;
 

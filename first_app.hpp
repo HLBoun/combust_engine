@@ -33,11 +33,14 @@ namespace cmbst
       void createPipelineLayout();
       void createPipeline();
       void createCommandBuffers();
+      void freeCommandBuffers();
       void drawFrame();
+      void recreateSwapChain();
+      void recordCommandBuffer(int imageIndex);
 
       CmbstWindow cmbstWindow{WIDTH, HEIGHT, "Hello Vulkan!"};
       CmbstDevice cmbstDevice {cmbstWindow};
-      CmbstSwapChain cmbstSwapChain{cmbstDevice, cmbstWindow.getExtent()};
+      std::unique_ptr<CmbstSwapChain> cmbstSwapChain;
       std::unique_ptr<CmbstPipeline> cmbstPipeline;
       VkPipelineLayout pipelineLayout;
       std::vector<VkCommandBuffer> commandBuffers;
