@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmbst_device.hpp" />
+    <ClInclude Include="cmbst_game_object.hpp" />
     <ClInclude Include="cmbst_model.hpp" />
     <ClInclude Include="cmbst_pipeline.hpp" />
     <ClInclude Include="cmbst_swap_chain.hpp" />
@@ -154,6 +155,10 @@
   <ItemGroup>
     <None Include="compile.bat" />
     <None Include="makefile" />
+    <None Include="shaders\simple_shader.frag" />
+    <None Include="shaders\simple_shader.frag.spv" />
+    <None Include="shaders\simple_shader.vert" />
+    <None Include="shaders\simple_shader.vert.spv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

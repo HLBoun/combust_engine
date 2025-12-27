@@ -5,6 +5,7 @@
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 
 
 // std
@@ -17,13 +18,14 @@ namespace cmbst
 {
   struct SimplePushConstantData
   {
-      glm::vec2 offset;
-      alignas(16) glm::vec3 color;
+    glm::mat2 transform{1.f};
+    glm::vec2 offset;
+    alignas(16) glm::vec3 color;
   };
 
   FirstApp::FirstApp()
   {
-    loadModels();
+    loadGameObjects();
     createPipelineLayout();
     recreateSwapChain();
     createCommandBuffers();
@@ -34,14 +36,23 @@ namespace cmbst
     vkDestroyPipelineLayout(cmbstDevice.device(), pipelineLayout, nullptr);
   }
 
-  void FirstApp::loadModels()
+  void FirstApp::loadGameObjects()
   {
     std::vector<CmbstModel::Vertex> vertices
     {
       {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
       {{0.5f, 0.5f},  {0.0f, 1.0f, 0.0f}},
       {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}};
-    cmbstModel = std::make_unique<CmbstModel>(cmbstDevice, vertices);
+    auto cmbstModel = std::make_shared<CmbstModel>(cmbstDevice, vertices);
+
+    auto triangle = CmbstGameObject::createGameObject();
+    triangle.model = cmbstModel;
+    triangle.color = {.1f, .8f, .1f};
+    triangle.transform2d.translation.x = .2f;
+    triangle.transform2d.scale = {2.f, .5f};
+    triangle.transform2d.rotation = .25f * glm::two_pi<float>();
+
+    gameObjects.push_back(std::move(triangle));
   }
 
   void FirstApp::run()
@@ -156,9 +167,6 @@ namespace cmbst
 
   void FirstApp::recordCommandBuffer(int imageIndex)
   {
-    static int frame = 30;
-    frame = (frame + 1) % 100;
-
     VkCommandBufferBeginInfo beginInfo{};
 
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -195,29 +203,38 @@ namespace cmbst
     vkCmdSetViewport(commandBuffers[imageIndex], 0, 1, &viewport);
     vkCmdSetScissor(commandBuffers[imageIndex], 0, 1, &scissor);
 
-    cmbstPipeline->bind(commandBuffers[imageIndex]);
-    cmbstModel->bind(commandBuffers[imageIndex]);
-
-    for (int j = 0; j < 4; j++)
-    {
-      SimplePushConstantData push{};
-      push.offset = {-0.5f + frame * 0.02f, -0.4f + j * 0.25f};
-      push.color = {0.0f, 0.0f, 0.2f + 0.2f * j};
-
-      vkCmdPushConstants(
-          commandBuffers[imageIndex],
-          pipelineLayout,
-          VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-          0,
-          sizeof(SimplePushConstantData),
-          &push);
-    }
-    cmbstModel->draw(commandBuffers[imageIndex]);
+    renderGameObjects(commandBuffers[imageIndex]);
 
     vkCmdEndRenderPass(commandBuffers[imageIndex]);
     if(vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS)
     {
       throw std::runtime_error("failed to record command buffer!");
+    }
+  }
+
+  void FirstApp::renderGameObjects(VkCommandBuffer commandBuffer)
+  {
+    cmbstPipeline->bind(commandBuffer);
+    
+    for (auto& obj: gameObjects)
+    {
+        obj.transform2d.rotation = glm::mod(obj.transform2d.rotation + 0.01f, glm::two_pi<float>());
+
+      SimplePushConstantData push{};
+      push.offset = obj.transform2d.translation;
+      push.color = obj.color;
+      push.transform = obj.transform2d.mat2();
+
+      vkCmdPushConstants(
+          commandBuffer,
+          pipelineLayout,
+          VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+          0,
+          sizeof(SimplePushConstantData),
+          &push);
+      obj.model->bind(commandBuffer);
+      obj.model->draw(commandBuffer);
+
     }
   }
 

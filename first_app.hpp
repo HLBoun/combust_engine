@@ -5,7 +5,7 @@
 #include "cmbst_pipeline.hpp"
 #include "cmbst_device.hpp"
 #include "cmbst_swap_chain.hpp"
-#include "cmbst_model.hpp"
+#include "cmbst_game_object.hpp"
 
 // std
 #include <memory>
@@ -29,7 +29,7 @@ namespace cmbst
       void run();
     
     private:
-      void loadModels();
+      void loadGameObjects();
       void createPipelineLayout();
       void createPipeline();
       void createCommandBuffers();
@@ -37,6 +37,7 @@ namespace cmbst
       void drawFrame();
       void recreateSwapChain();
       void recordCommandBuffer(int imageIndex);
+      void renderGameObjects(VkCommandBuffer commandBuffer);
 
       CmbstWindow cmbstWindow{WIDTH, HEIGHT, "Hello Vulkan!"};
       CmbstDevice cmbstDevice {cmbstWindow};
@@ -44,7 +45,7 @@ namespace cmbst
       std::unique_ptr<CmbstPipeline> cmbstPipeline;
       VkPipelineLayout pipelineLayout;
       std::vector<VkCommandBuffer> commandBuffers;
-      std::unique_ptr<CmbstModel> cmbstModel;
+      std::vector<CmbstGameObject> gameObjects;
   };
 
 } // namespace cmbst
